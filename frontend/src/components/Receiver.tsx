@@ -4,7 +4,7 @@ export function Receiver() {
 	const videoRef = useRef<HTMLVideoElement>(null);
 
 	useEffect(() => {
-		const socket = new WebSocket("ws://localhost:8080");
+		const socket = new WebSocket("https://webrtc-testing-u170.onrender.com/");
 		const pc = new RTCPeerConnection();
 
 		const videoElement = videoRef.current;
