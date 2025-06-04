@@ -66,7 +66,7 @@ export function Sender() {
 
 		const stream = await navigator.mediaDevices.getUserMedia({
 			video: true,
-			audio: false,
+			audio: true,
 		});
 
 		if (videoRefSrc.current) {

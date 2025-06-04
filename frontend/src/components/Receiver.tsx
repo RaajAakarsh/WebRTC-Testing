@@ -42,7 +42,7 @@ export function Receiver() {
 
 				const stream = await navigator.mediaDevices.getUserMedia({
 					video: true,
-					audio: false,
+					audio: true,
 				});
 				if (videoRefSrc.current) {
 					videoRefSrc.current.srcObject = stream;
