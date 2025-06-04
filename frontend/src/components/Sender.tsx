@@ -23,7 +23,7 @@ export function Sender() {
 		// first we have to create an offer
 		// so basically the browser 1 creates an RTCPeerConnection instance(which is a WebRtC object in the frontend that gives you access to things like offer , answer)
 		// it is a high level api to do high level api things
-		const pc = new RTCPeerConnection();
+		const pc = new RTCPeerConnection(); 
 		pcRef.current = pc;
 
 		pc.ontrack = (event) => {
