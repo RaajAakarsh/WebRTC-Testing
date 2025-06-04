@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 
 export function Sender() {
 	const videoRef = useRef<HTMLVideoElement>(null);
+	const videoRefSrc = useRef<HTMLVideoElement>(null);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
 	const socketRef = useRef<WebSocket | null>(null);
 	const pcRef = useRef<RTCPeerConnection | null>(null);
@@ -60,11 +61,17 @@ export function Sender() {
 			video: true,
 			audio: false,
 		});
+
+		if (videoRefSrc.current) {
+			videoRefSrc.current.srcObject = stream;
+			console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		}
+
 		stream.getTracks().forEach((track) => {
 			pc.addTrack(track, stream); // ✅ this `stream` is critical
 		});
-		console.log("Video track added to RTCPeerConnection");
 
+		console.log("Video track added to RTCPeerConnection");
 		console.log("Added video tracks:", stream.getVideoTracks());
 		console.log("PeerConnection senders:", pc.getSenders());
 	}
@@ -87,6 +94,15 @@ export function Sender() {
 			<h1>Sender Component</h1>
 			<p>This is the sender component where you can send messages.</p>
 			<button onClick={StartSendingVideo}>Send Video</button>
+			<p
+				style={{
+					textAlign: "left",
+					fontWeight: "bold",
+					color: "blue",
+				}}
+			>
+				Receiver
+			</p>
 			<video
 				//receivers vid
 				ref={videoRef}
@@ -97,6 +113,29 @@ export function Sender() {
 					width: "600px",
 					border: "1px solid red",
 					transform: "scaleX(-1)",
+					display: "block",
+				}}
+			/>
+			<p
+				style={{
+					textAlign: "left",
+					fontWeight: "bold",
+					color: "blue",
+				}}
+			>
+				Sender
+			</p>
+			<video
+				//senders vid
+				ref={videoRefSrc}
+				autoPlay
+				playsInline
+				muted
+				style={{
+					width: "200px",
+					border: "1px solid red",
+					transform: "scaleX(-1)",
+					display: "block",
 				}}
 			/>
 		</div>
