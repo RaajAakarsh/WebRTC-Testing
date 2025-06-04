@@ -102,7 +102,6 @@ export function Sender() {
 				ref={videoRef}
 				autoPlay
 				playsInline
-				muted
 				style={{
 					width: "600px",
 					border: "1px solid red",
