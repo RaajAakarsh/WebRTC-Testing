@@ -26,6 +26,13 @@ export function Sender() {
 		const pc = new RTCPeerConnection();
 		pcRef.current = pc;
 
+		pc.ontrack = (event) => {
+			console.log("Sender received track from receiver", event.streams);
+			if (videoRef.current) {
+				videoRef.current.srcObject = event.streams[0];
+			}
+		};
+
 		pc.onnegotiationneeded = async () => {
 			console.log("negotiation needed - sender");
 			const offer = await pc.createOffer();
@@ -75,19 +82,6 @@ export function Sender() {
 		console.log("Added video tracks:", stream.getVideoTracks());
 		console.log("PeerConnection senders:", pc.getSenders());
 	}
-
-	useEffect(() => {
-		const videoElement = videoRef.current;
-		if (!videoElement) return;
-
-		// ✅ Set this immediately after creating pc
-		if (pcRef.current) {
-			pcRef.current.ontrack = (event) => {
-				console.log("Sender received track from receiver", event.streams);
-				videoElement.srcObject = event.streams[0];
-			};
-		}
-	}, [pcRef.current]);
 
 	return (
 		<div>
