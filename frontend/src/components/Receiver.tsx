@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import bgImage from "../assets/mesh-140.png";
 
 export function Receiver() {
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -70,52 +71,67 @@ export function Receiver() {
 	}, []);
 
 	return (
-		<div>
-			<h1>Receiver Component</h1>
+		<div
+			style={{
+				height: "100vh",
+				width: "100vw",
+				padding: "20px",
+				boxSizing: "border-box",
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "center",
+				alignItems: "center",
+				backgroundImage: `url(${bgImage})`,
+				backgroundRepeat: "no-repeat",
+				backgroundSize: "cover",
+				backgroundPosition: "top left",
+			}}
+		>
+			<h1 style={{ color: "black" }}>Receiver Component</h1>
 			<p>This is the receiver component where you can receive messages.</p>
-			<p
+			<div
 				style={{
-					textAlign: "left",
-					fontWeight: "bold",
-					color: "blue",
+					flex: 1,
+					width: "max-content",
+					position: "relative",
+					marginTop: "20px",
+					display: "flex",
+					justifyContent: "center",
 				}}
 			>
-				Sender
-			</p>
-			<video
-				// senders vid
-				ref={videoRef}
-				autoPlay
-				playsInline
-				style={{
-					width: "600px",
-					border: "1px solid red",
-					transform: "scaleX(-1)",
-					display: "block",
-				}}
-			/>
-			<p
-				style={{
-					textAlign: "left",
-					fontWeight: "bold",
-					color: "blue",
-				}}
-			>
-				Receiver
-			</p>
-			<video
-				// receivers vid
-				ref={videoRefSrc}
-				autoPlay
-				playsInline
-				muted
-				style={{
-					width: "200px",
-					border: "1px solid red",
-					transform: "scaleX(-1)",
-					display: "block",
-				}}
-			/>
+				<video
+					// senders vid
+					ref={videoRef}
+					autoPlay
+					playsInline
+					style={{
+						height: "100%",
+						maxWidth: "calc(100vw - 40px)",
+						border: "1px solid rgb(0, 0, 0)",
+						borderRadius: "10px",
+						transform: "scaleX(-1)",
+						display: "block",
+					}}
+				/>
+
+				<video
+					// receivers vid
+					ref={videoRefSrc}
+					autoPlay
+					playsInline
+					muted
+					style={{
+						position: "absolute",
+						bottom: "10px",
+						left: "10px",
+						width: "35%",
+						border: "1px solid rgb(0, 0, 0)",
+						borderRadius: "10px",
+						transform: "scaleX(-1)",
+						display: "block",
+					}}
+				/>
+			</div>
 		</div>
 	);
 }

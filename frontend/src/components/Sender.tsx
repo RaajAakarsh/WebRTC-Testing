@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import bgImage from "../assets/mesh-140.png";
 
 export function Sender() {
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -23,7 +24,7 @@ export function Sender() {
 		// first we have to create an offer
 		// so basically the browser 1 creates an RTCPeerConnection instance(which is a WebRtC object in the frontend that gives you access to things like offer , answer)
 		// it is a high level api to do high level api things
-		const pc = new RTCPeerConnection(); 
+		const pc = new RTCPeerConnection();
 		pcRef.current = pc;
 
 		pc.ontrack = (event) => {
@@ -75,7 +76,7 @@ export function Sender() {
 		}
 
 		stream.getTracks().forEach((track) => {
-			pc.addTrack(track, stream); // ✅ this `stream` is critical
+			pc.addTrack(track, stream);
 		});
 
 		console.log("Video track added to RTCPeerConnection");
@@ -84,53 +85,82 @@ export function Sender() {
 	}
 
 	return (
-		<div>
-			<h1>Sender Component</h1>
+		<div
+			style={{
+				height: "100vh",
+				width: "100vw",
+				padding: "20px",
+				boxSizing: "border-box",
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "center",
+				alignItems: "center",
+				backgroundImage: `url(${bgImage})`,
+				backgroundRepeat: "no-repeat",
+				backgroundSize: "cover",
+				backgroundPosition: "top left",
+			}}
+		>
+			<h1 style={{ color: "black" }}>Sender Component</h1>
 			<p>This is the sender component where you can send messages.</p>
-			<button onClick={StartSendingVideo}>Send Video</button>
-			<p
+			<button
+				onClick={StartSendingVideo}
 				style={{
-					textAlign: "left",
-					fontWeight: "bold",
-					color: "blue",
+					marginTop: "20px",
+					maxWidth: "20%",
+					backgroundColor: "#24fd89",
+					color: "black",
+					borderRadius: "10px",
+					padding: "10px 20px",
+					border: "none",
+					cursor: "pointer",
 				}}
 			>
-				Receiver
-			</p>
-			<video
-				//receivers vid
-				ref={videoRef}
-				autoPlay
-				playsInline
+				Send Video
+			</button>
+			<div
 				style={{
-					width: "600px",
-					border: "1px solid red",
-					transform: "scaleX(-1)",
-					display: "block",
-				}}
-			/>
-			<p
-				style={{
-					textAlign: "left",
-					fontWeight: "bold",
-					color: "blue",
+					flex: 1,
+					width: "max-content",
+					position: "relative",
+					marginTop: "20px",
+					display: "flex",
+					justifyContent: "center",
 				}}
 			>
-				Sender
-			</p>
-			<video
-				//senders vid
-				ref={videoRefSrc}
-				autoPlay
-				playsInline
-				muted
-				style={{
-					width: "200px",
-					border: "1px solid red",
-					transform: "scaleX(-1)",
-					display: "block",
-				}}
-			/>
+				<video
+					//receivers vid
+					ref={videoRef}
+					autoPlay
+					playsInline
+					style={{
+						height: "100%",
+						maxWidth: "calc(100vw - 40px)",
+						border: "1px solid rgb(0, 0, 0)",
+						borderRadius: "10px",
+						transform: "scaleX(-1)",
+						display: "block",
+					}}
+				/>
+
+				<video
+					//senders vid
+					ref={videoRefSrc}
+					autoPlay
+					playsInline
+					muted
+					style={{
+						position: "absolute",
+						bottom: "10px",
+						left: "10px",
+						width: "35%",
+						border: "1px solid rgb(0, 0, 0)",
+						borderRadius: "10px",
+						transform: "scaleX(-1)",
+						display: "block",
+					}}
+				/>
+			</div>
 		</div>
 	);
 }
