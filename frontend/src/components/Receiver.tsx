@@ -2,10 +2,15 @@ import { useEffect, useRef } from "react";
 
 export function Receiver() {
 	const videoRef = useRef<HTMLVideoElement>(null);
+	const pcRef = useRef<RTCPeerConnection | null>(null);
+	const socketRef = useRef<WebSocket | null>(null);
 
 	useEffect(() => {
 		const socket = new WebSocket("https://webrtc-testing-u170.onrender.com/");
 		const pc = new RTCPeerConnection();
+
+		pcRef.current = pc;
+		socketRef.current = socket;
 
 		const videoElement = videoRef.current;
 
@@ -38,6 +43,15 @@ export function Receiver() {
 			const message = JSON.parse(event.data);
 			if (message.type === "create-offer") {
 				await pc.setRemoteDescription(new RTCSessionDescription(message.offer));
+				
+				const stream = await navigator.mediaDevices.getUserMedia({
+					video: true,
+					audio: false,
+				});
+				stream.getTracks().forEach((track) => {
+					pc.addTrack(track, stream);
+				});
+
 				const answer = await pc.createAnswer();
 				await pc.setLocalDescription(answer);
 				socket.send(
@@ -60,11 +74,16 @@ export function Receiver() {
 			<h1>Receiver Component</h1>
 			<p>This is the receiver component where you can receive messages.</p>
 			<video
+				// senders vid
 				ref={videoRef}
 				autoPlay
 				playsInline
 				muted
-				style={{ width: "600px", border: "1px solid red" , transform: "scaleX(-1)"}}
+				style={{
+					width: "600px",
+					border: "1px solid red",
+					transform: "scaleX(-1)",
+				}}
 			/>
 		</div>
 	);

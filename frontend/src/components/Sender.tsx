@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function Sender() {
+	const videoRef = useRef<HTMLVideoElement>(null);
 	const [socket, setSocket] = useState<WebSocket | null>(null);
+	const socketRef = useRef<WebSocket | null>(null);
+	const pcRef = useRef<RTCPeerConnection | null>(null);
 
 	useEffect(() => {
 		const socket = new WebSocket("https://webrtc-testing-u170.onrender.com/");
@@ -11,6 +14,7 @@ export function Sender() {
 		};
 
 		setSocket(socket);
+		socketRef.current = socket;
 	}, []);
 
 	async function StartSendingVideo() {
@@ -19,6 +23,8 @@ export function Sender() {
 		// so basically the browser 1 creates an RTCPeerConnection instance(which is a WebRtC object in the frontend that gives you access to things like offer , answer)
 		// it is a high level api to do high level api things
 		const pc = new RTCPeerConnection();
+		pcRef.current = pc;
+
 		pc.onnegotiationneeded = async () => {
 			console.log("negotiation needed - sender");
 			const offer = await pc.createOffer();
@@ -63,11 +69,36 @@ export function Sender() {
 		console.log("PeerConnection senders:", pc.getSenders());
 	}
 
+	useEffect(() => {
+		const videoElement = videoRef.current;
+		if (!videoElement) return;
+
+		// ✅ Set this immediately after creating pc
+		if (pcRef.current) {
+			pcRef.current.ontrack = (event) => {
+				console.log("Sender received track from receiver", event.streams);
+				videoElement.srcObject = event.streams[0];
+			};
+		}
+	}, [pcRef.current]);
+
 	return (
 		<div>
 			<h1>Sender Component</h1>
 			<p>This is the sender component where you can send messages.</p>
 			<button onClick={StartSendingVideo}>Send Video</button>
+			<video
+				//receivers vid
+				ref={videoRef}
+				autoPlay
+				playsInline
+				muted
+				style={{
+					width: "600px",
+					border: "1px solid red",
+					transform: "scaleX(-1)",
+				}}
+			/>
 		</div>
 	);
 }
